@@ -1,4 +1,4 @@
-**Full Stack open**
+#Full Stack open
 
 Each folder within the repo coincides with the the exercises for each referenced section.
 
