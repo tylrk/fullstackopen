@@ -13,7 +13,7 @@ sequenceDiagram
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
     Note right of browser: Browser responds with GET request requested by server
     activate server
-    server-->>browser: URL redirect requesting a new GET request
+    server-->>browser: HTML document
     deactivate server
     
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
