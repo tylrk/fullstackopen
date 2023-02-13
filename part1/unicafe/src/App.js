@@ -7,10 +7,12 @@ const Button = ({ handleClick, text }) => {
 const StatisticLine = ({ text, value }) => {
   return (
     <div>
-      <p>{text} {value}</p>
+      <p>
+        {text} {value}
+      </p>
     </div>
-  )
-}
+  );
+};
 
 const Statistics = ({ good, neutral, bad, total, average, positive }) => {
   return (
@@ -49,7 +51,7 @@ const App = () => {
 
   const total = good + neutral + bad;
   const average = (good - bad) / total;
-  const positive = `${(good / total) * 100} %` ;
+  const positive = `${(good / total) * 100} %`;
 
   return (
     <div>
