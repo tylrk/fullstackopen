@@ -25,23 +25,19 @@ const App = () => {
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
 
-
   const handleGoodClick = () => {
     setGood(good + 1);
     console.log(good);
-
   };
 
   const handleNeutralClick = () => {
     setNeutral(neutral + 1);
     console.log(neutral);
-
   };
 
   const handleBadClick = () => {
     setBad(bad + 1);
     console.log(bad);
-
   };
 
   const total = good + neutral + bad;
