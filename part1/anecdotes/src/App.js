@@ -3,6 +3,7 @@ import { useState } from 'react';
 const Button = ({ random }) => {
   return (
     <div>
+      <button>vote</button>
     <button onClick={random}>next anecdote</button>
     </div>
   )
