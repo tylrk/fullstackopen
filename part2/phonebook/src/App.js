@@ -8,14 +8,14 @@ const App = () => {
 
   const addName = (e) => {
     e.preventDefault();
-    const nameObject = {
+    const personObject = {
       name: newName,
       number: newNumber,
     };
-    const nameExists = persons.find((person) => person.name === newName || person.number === newNumber);
-    nameExists
+    const personExists = persons.find((person) => person.name === newName || person.number === newNumber);
+    personExists
       ? alert(`${newName || newNumber} is already added to the phonebook`)
-      : setPersons(persons.concat(nameObject));
+      : setPersons(persons.concat(personObject));
     setNewName("");
     setNewNumber("");
   };
