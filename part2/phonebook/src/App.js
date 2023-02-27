@@ -70,7 +70,13 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <Persons filterNames={filterNames} />
+      {filterNames.map(person => (
+        <Persons 
+          key={person.id} 
+          name={person.name}
+          number={person.number}
+          />
+      ))}
     </div>
   );
 };
