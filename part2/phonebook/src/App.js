@@ -4,7 +4,6 @@ import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import numberService from "./services/numbers";
 
-
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
@@ -12,14 +11,13 @@ const App = () => {
   const [nameFilter, setNameFilter] = useState("");
 
   useEffect(() => {
-    console.log('effect');
-    numberService.getAll()
-      .then(initialNumbers => {
-        console.log('so fulfilled');
-        setPersons(initialNumbers)
-    })
+    console.log("effect");
+    numberService.getAll().then((initialNumbers) => {
+      console.log("so fulfilled");
+      setPersons(initialNumbers);
+    });
   }, []);
-  console.log('render', persons.length, 'persons')
+  console.log("render", persons.length, "persons");
 
   const addPerson = (e) => {
     e.preventDefault();
@@ -36,9 +34,11 @@ const App = () => {
     );
     personExists
       ? alert(`${newName || newNumber} is already added to the phonebook`)
-      : setPersons(persons.concat(personObject));
-    setNewName("");
-    setNewNumber("");
+      : numberService.create(personObject).then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson));
+          setNewName("");
+          setNewNumber("");
+        });
   };
 
   const handleNameChange = (e) => {
