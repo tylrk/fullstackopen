@@ -17,7 +17,6 @@ const App = () => {
       setPersons(initialNumbers);
     });
   }, []);
-  console.log("render", persons.length, "persons");
 
   const addPerson = (e) => {
     e.preventDefault();
@@ -39,6 +38,13 @@ const App = () => {
           setNewName("");
           setNewNumber("");
         });
+  };
+
+  const deletePerson = (id) => {
+    const updatedArr = persons.filter((p) => p.id !== id);
+    numberService.deleteNum(id, updatedArr).then((returnedArr) => {
+      setPersons(returnedArr);
+    });
   };
 
   const handleNameChange = (e) => {
@@ -70,12 +76,8 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h2>Numbers</h2>
-      {filterNames.map(person => (
-        <Persons 
-          key={person.id} 
-          name={person.name}
-          number={person.number}
-          />
+      {filterNames.map((person) => (
+        <Persons key={person.id} name={person.name} number={person.number} deletePerson={deletePerson} />
       ))}
     </div>
   );
