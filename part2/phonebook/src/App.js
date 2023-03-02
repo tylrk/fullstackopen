@@ -41,10 +41,15 @@ const App = () => {
   };
 
   const deletePerson = (id) => {
-    const updatedArr = persons.filter((p) => p.id !== id);
-    numberService.deleteNum(id, updatedArr).then((returnedArr) => {
-      setPersons(returnedArr);
-    });
+    const newPersons = persons.filter((p) => p.id !== id);
+    const personObject = { ...newPersons };
+    const deletedPerson = persons.find((p) => p.id === id);
+
+    if (window.confirm(`Delete ${deletedPerson.name}?`)) {
+      numberService.deleteNum(id, personObject).then(() => {
+        setPersons(persons.filter((p) => p.id !== id));
+      });
+    }
   };
 
   const handleNameChange = (e) => {
@@ -77,7 +82,12 @@ const App = () => {
       />
       <h2>Numbers</h2>
       {filterNames.map((person) => (
-        <Persons key={person.id} name={person.name} number={person.number} deletePerson={deletePerson} />
+        <Persons
+          key={person.id}
+          name={person.name}
+          number={person.number}
+          deletePerson={() => deletePerson(person.id)}
+        />
       ))}
     </div>
   );

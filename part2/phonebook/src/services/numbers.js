@@ -17,8 +17,8 @@ const update = (id, newObject) => {
   return request.then((response) => response.data);
 };
 
-const deleteNum = (id, newArr) => {
-    const request = axios.delete(`${baseUrl}/${id}`, newArr);
+const deleteNum = (id, newObject) => {
+    const request = axios.delete(`${baseUrl}/${id}`, newObject);
     return request.then(response => response.data);
 }
 
