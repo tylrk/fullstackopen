@@ -31,13 +31,42 @@ const App = () => {
         person.name.toLowerCase() === newName.toLowerCase() ||
         person.number === newNumber
     );
-    personExists
-      ? alert(`${newName || newNumber} is already added to the phonebook`)
-      : numberService.create(personObject).then((returnedPerson) => {
+
+    if (personExists) {
+      if (
+        window.confirm(
+          `${personExists.name} is already added to the phonebook, replace the old number with a new one?`
+        )
+      ) {
+        const updatedPerson = { ...personExists, number: newNumber };
+
+        numberService
+          .update(updatedPerson.id, updatedPerson)
+          .then((returnedPerson) => {
+            setPersons(
+              persons.map((p) =>
+                p.id === personExists.id ? returnedPerson : p
+              )
+            );
+            setNewName("");
+            setNewNumber("");
+          })
+          .catch((err) => {
+            alert(`Could not update ${personExists.name}`);
+          });
+      }
+    } else {
+      numberService
+        .create(personObject)
+        .then((returnedPerson) => {
           setPersons(persons.concat(returnedPerson));
           setNewName("");
           setNewNumber("");
+        })
+        .catch((err) => {
+          alert(`Could not add ${newName}`);
         });
+    }
   };
 
   const deletePerson = (id) => {
@@ -46,9 +75,14 @@ const App = () => {
     const deletedPerson = persons.find((p) => p.id === id);
 
     if (window.confirm(`Delete ${deletedPerson.name}?`)) {
-      numberService.deleteNum(id, personObject).then(() => {
-        setPersons(persons.filter((p) => p.id !== id));
-      });
+      numberService
+        .deleteNum(id, personObject)
+        .then(() => {
+          setPersons(persons.filter((p) => p.id !== id));
+        })
+        .catch((err) => {
+          alert(`Could not delete ${deletedPerson.name}`);
+        });
     }
   };
 
