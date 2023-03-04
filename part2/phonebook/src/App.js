@@ -58,7 +58,7 @@ const App = () => {
             }, 3000);
           })
           .catch((err) => {
-            alert(`Could not update ${personExists.name}`);
+            setMessage(`Contact information for ${updatedPerson.name} has already been removed from the server`);
           });
       }
     } else {
@@ -74,7 +74,7 @@ const App = () => {
           }, 3000);
         })
         .catch((err) => {
-          alert(`Could not add ${newName}`);
+          setMessage(`Could not add ${newName}`);
         });
     }
   };
@@ -95,7 +95,7 @@ const App = () => {
             }, 3000);
         })
         .catch((err) => {
-          alert(`Could not delete ${deletedPerson.name}`);
+          setMessage(`Could not delete ${deletedPerson.name}`);
         });
     }
   };
