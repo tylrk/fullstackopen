@@ -3,12 +3,14 @@ import Persons from "./components/Persons";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import numberService from "./services/numbers";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [nameFilter, setNameFilter] = useState("");
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
     console.log("effect");
@@ -50,6 +52,10 @@ const App = () => {
             );
             setNewName("");
             setNewNumber("");
+            setMessage(`${updatedPerson.name}'s number has been updated`);
+            setTimeout(() => {
+              setMessage(null);
+            }, 3000);
           })
           .catch((err) => {
             alert(`Could not update ${personExists.name}`);
@@ -62,6 +68,10 @@ const App = () => {
           setPersons(persons.concat(returnedPerson));
           setNewName("");
           setNewNumber("");
+          setMessage(`Added ${personObject.name}`);
+          setTimeout(() => {
+            setMessage(null);
+          }, 3000);
         })
         .catch((err) => {
           alert(`Could not add ${newName}`);
@@ -79,6 +89,10 @@ const App = () => {
         .deleteNum(id, personObject)
         .then(() => {
           setPersons(persons.filter((p) => p.id !== id));
+          setMessage(`${deletedPerson.name} has been deleted`);
+            setTimeout(() => {
+              setMessage(null);
+            }, 3000);
         })
         .catch((err) => {
           alert(`Could not delete ${deletedPerson.name}`);
@@ -105,6 +119,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification message={message} />
       <Filter nameFilter={nameFilter} handleFilter={handleFilter} />
       <h2>Add a New Contact</h2>
       <PersonForm
