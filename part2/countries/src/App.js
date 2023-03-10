@@ -5,6 +5,7 @@ import Country from "./components/Country";
 function App() {
   const [value, setValue] = useState("");
   const [country, setCountry] = useState([]);
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     console.log("effect ran, country is now", value);
@@ -23,13 +24,17 @@ function App() {
     setValue(event.target.value);
   };
 
+  const handleClick = () => {
+    setShow(!show)
+  }
+
   return (
     <div>
       <br />
       <form>
         Find Countries: <input value={value} onChange={handleChange} />
       </form>
-      <Country country={country} />
+      <Country country={country} show={handleClick}/>
     </div>
   );
 }

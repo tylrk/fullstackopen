@@ -1,9 +1,11 @@
-const Country = ({ country }) => {
+const Country = ({ country, show }) => {
   return (
     <div>
       {country.length > 1 && country.length <= 10
         ? country.map((item) => (
-            <p key={item.name.common}>{item.name.common}</p>
+            <p key={item.name.common}>
+              {item.name.common} <button onClick={() => show}>show</button>
+            </p>
           ))
         : null}
       {country.length === 1 ? (
