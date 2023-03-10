@@ -36,22 +36,38 @@ function App() {
       </form>
       <pre>
         {country.length > 0 && country.length <= 10 ? (
-          country.map((item) => <p key={item.name.common}>{item.name.common}</p>)
+          country.map((item) => (
+            <h1 key={item.name.common}>{item.name.common}</h1>
+          ))
         ) : (
           <p>Too many matches, please specify</p>
         )}
-        {country.length === 1
-          ? country.map((item, idx) => (
-              <div key={idx}>
-                <p key={item.capital}>Capital: {item.capital}</p>
-                <p key={item.area}>Area: {item.area}</p>
-                <h3>Languages:</h3>
-              </div>
-            ))
-          : null}
+        {country.length === 1 ? (
+          <div>
+            <p>Capital: {country[0].capital}</p>
+            <p>Area: {country[0].area}</p>
+            <h3>Languages:</h3>
+            <ul>
+            {country.map((item) =>
+              Object.values(item.languages).map((val) => (
+                <li key={val}>{val}</li>
+              ))
+            )}
+            </ul>
+            <img src={country[0].flags.png} alt={country[0].flags.alt}/>
+          </div>
+        ) : null}
       </pre>
     </div>
   );
 }
 
 export default App;
+
+// country.map((item, idx) => (
+//   <div key={idx}>
+//     <p key={item.capital}>Capital: {item.capital}</p>
+//     <p key={item.area}>Area: {item.area}</p>
+//     <h3>Languages:</h3>
+//   </div>
+// )
