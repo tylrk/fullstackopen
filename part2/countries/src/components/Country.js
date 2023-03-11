@@ -1,28 +1,29 @@
-const Country = ({ country, show }) => {
+const Country = ({ country, onSelect, selectedCountry }) => {
+  const handleClick = () => {
+    onSelect(country);
+  };
+
   return (
     <div>
-      {country.length > 1 && country.length <= 10
-        ? country.map((item) => (
-            <p key={item.name.common}>
-              {item.name.common} <button onClick={() => show}>show</button>
-            </p>
-          ))
-        : null}
-      {country.length === 1 ? (
+      {selectedCountry &&
+      selectedCountry.name.common === country.name.common ? (
         <div>
-          <h2>{country[0].name.common}</h2>
-          <p>Capital: {country[0].capital}</p>
-          <p>Area: {country[0].area}</p>
+          <h2>{country.name.common}</h2>
+          <p>Capital: {country.capital}</p>
+          <p>Area: {country.area}</p>
           <h3>Languages:</h3>
           <ul>
-            {Object.values(country[0].languages).map((val) => (
+            {Object.values(country.languages).map((val) => (
               <li key={val}>{val}</li>
             ))}
           </ul>
-          <img src={country[0].flags.png} alt={country[0].flags.alt} />
+          <img src={country.flags.png} alt={country.flags.alt} />
         </div>
-      ) : null}
-      {country.length > 10 ? <p>Too many matches, please specify</p> : null}
+      ) : (
+        <p>
+          {country.name.common} <button onClick={handleClick}>show</button>
+        </p>
+      )}
     </div>
   );
 };

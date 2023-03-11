@@ -4,8 +4,8 @@ import Country from "./components/Country";
 
 function App() {
   const [value, setValue] = useState("");
-  const [country, setCountry] = useState([]);
-  const [show, setShow] = useState(false);
+  const [countries, setCountries] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState(null);
 
   useEffect(() => {
     console.log("effect ran, country is now", value);
@@ -15,7 +15,15 @@ function App() {
       axios
         .get(`https://restcountries.com/v3.1/name/${value}`)
         .then((response) => {
-          setCountry(response.data);
+          setCountries(response.data);
+          if (response.data.length === 1) {
+            setSelectedCountry(response.data[0]);
+          } else {
+            setSelectedCountry(null);
+          }
+        })
+        .catch((err) => {
+          alert("Cannot find countries");
         });
     }
   }, [value]);
@@ -24,9 +32,9 @@ function App() {
     setValue(event.target.value);
   };
 
-  const handleClick = () => {
-    setShow(!show)
-  }
+  const handleClick = (country) => {
+    setSelectedCountry(country);
+  };
 
   return (
     <div>
@@ -34,7 +42,18 @@ function App() {
       <form>
         Find Countries: <input value={value} onChange={handleChange} />
       </form>
-      <Country country={country} show={handleClick}/>
+      {countries.length > 10 ? (
+        <p>Too many matches, please specify</p>
+      ) : (
+        countries.map((country) => (
+          <Country
+            key={country.name.common}
+            country={country}
+            onSelect={handleClick}
+            selectedCountry={selectedCountry}
+          />
+        ))
+      )}
     </div>
   );
 }
