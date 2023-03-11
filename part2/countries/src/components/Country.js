@@ -1,8 +1,4 @@
 const Country = ({ country, onSelect, selectedCountry }) => {
-  const handleClick = () => {
-    onSelect(country);
-  };
-
   return (
     <div>
       {selectedCountry &&
@@ -21,7 +17,8 @@ const Country = ({ country, onSelect, selectedCountry }) => {
         </div>
       ) : (
         <p>
-          {country.name.common} <button onClick={handleClick}>show</button>
+          {country.name.common}{" "}
+          <button onClick={() => onSelect(country)}>show</button>
         </p>
       )}
     </div>
