@@ -50,7 +50,7 @@ function App() {
   };
 
   const handleClick = (country) => {
-    setSelectedCountry(country)
+    setSelectedCountry(country);
   };
 
   return (
