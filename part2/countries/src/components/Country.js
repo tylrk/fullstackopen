@@ -13,7 +13,7 @@ const Country = ({ country, onSelect, selectedCountry, weather }) => {
               <li key={val}>{val}</li>
             ))}
           </ul>
-          <img src={country.flags.png} alt={country.flags.alt} />
+          <img src={country.flags.png} alt={country.flags.alt} width='200' />
           <h2>Weather in {country.capital}</h2>
           {weather.current && (
             <div>
@@ -21,6 +21,7 @@ const Country = ({ country, onSelect, selectedCountry, weather }) => {
               <img
                 src={`https://openweathermap.org/img/wn/${weather.current.weather[0].icon}@2x.png`}
                 alt={weather.current.weather[0].description}
+                width='80'
               />
               <p>Wind: {weather.current.wind_speed} m/s</p>
             </div>
