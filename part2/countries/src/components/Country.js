@@ -1,4 +1,4 @@
-const Country = ({ country, onSelect, selectedCountry }) => {
+const Country = ({ country, onSelect, selectedCountry, weather }) => {
   return (
     <div>
       {selectedCountry &&
@@ -14,6 +14,12 @@ const Country = ({ country, onSelect, selectedCountry }) => {
             ))}
           </ul>
           <img src={country.flags.png} alt={country.flags.alt} />
+          <h2>Weather in {country.capital}</h2>
+          {weather.current && (<div>
+          <p>Temperature: {weather.current.temp} Fahrenheit</p>
+          {/* <img src={weather.weather.icon} alt={weather.weather.description}/> */}
+          </div>
+          )}
         </div>
       ) : (
         <p>
