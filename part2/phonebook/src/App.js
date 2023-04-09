@@ -73,8 +73,8 @@ const App = () => {
             setMessage(null);
           }, 3000);
         })
-        .catch((err) => {
-          setMessage(`Could not add ${newName}`);
+        .catch((error) => {
+          setMessage(error.response.data.error);
         });
     }
   };
