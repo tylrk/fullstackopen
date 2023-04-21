@@ -14,8 +14,33 @@ const favoriteBlog = (blogs) => {
   return blogs.length === 0 ? null : blogs.find((blog) => blog.likes === max);
 };
 
+const mostBlogs = (blogs) => {
+  const author = blogs.map((blog) => blog.author);
+  const count = blogs.reduce((countObj, blog) => {
+    const value = blog.author;
+    countObj[value] = (countObj[value] || 0) + 1;
+    return countObj;
+  }, {});
+
+  let maxCount = 0;
+  let mostCommonAuthor;
+
+  for (let author in count) {
+    if (count[author] > maxCount) {
+      maxCount = count[author];
+      mostCommonAuthor = author;
+    }
+  }
+
+  return {
+    author: mostCommonAuthor,
+    blogs: maxCount,
+  };
+};
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
+  mostBlogs,
 };
