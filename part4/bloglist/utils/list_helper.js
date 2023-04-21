@@ -15,7 +15,6 @@ const favoriteBlog = (blogs) => {
 };
 
 const mostBlogs = (blogs) => {
-  const author = blogs.map((blog) => blog.author);
   const count = blogs.reduce((countObj, blog) => {
     const value = blog.author;
     countObj[value] = (countObj[value] || 0) + 1;
@@ -38,9 +37,27 @@ const mostBlogs = (blogs) => {
   };
 };
 
+const mostLikes = (blogs) => {
+  const likesByAuthor = blogs.reduce((likes, blog) => {
+    likes[blog.author] = (likes[blog.author] || 0) + blog.likes;
+    return likes;
+  }, {});
+
+  const [author, likes] = Object.entries(likesByAuthor).reduce(
+    (accumulator, [currentAuthor, currentLikes]) =>
+      currentLikes > accumulator[1]
+        ? [currentAuthor, currentLikes]
+        : accumulator,
+    [null, 0]
+  );
+
+  return { author: author, likes: likes };
+};
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
   mostBlogs,
+  mostLikes,
 };
