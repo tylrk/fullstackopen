@@ -26,6 +26,12 @@ test("all blogs are returned", async () => {
   expect(response.body).toHaveLength(listHelper.blogs.length);
 });
 
+test("unique identifier property is named id", async () => {
+  const response = await api.get("/api/blogs");
+  const blogIds = response.body.every((blog) => blog.id !== undefined);
+  expect(blogIds).toBeDefined();
+});
+
 test("dummy returns one", () => {
   const blogs = [];
 
