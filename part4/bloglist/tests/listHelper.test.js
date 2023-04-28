@@ -32,6 +32,27 @@ test("unique identifier property is named id", async () => {
   expect(blogIds).toBeDefined();
 });
 
+test("a valid blog can be added", async () => {
+  const newBlog = {
+    title: "issa blog",
+    author: "tkhan",
+    url: "www.issablog.io",
+    likes: 420,
+  };
+
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
+
+  const blogsAtEnd = await listHelper.blogsInDb();
+  expect(blogsAtEnd).toHaveLength(listHelper.blogs.length + 1);
+
+  const contents = blogsAtEnd.map((blog) => blog.title);
+  expect(contents).toContain("issa blog");
+});
+
 test("dummy returns one", () => {
   const blogs = [];
 
