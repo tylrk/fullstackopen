@@ -53,6 +53,21 @@ test("a valid blog can be added", async () => {
   expect(contents).toContain("issa blog");
 });
 
+test("likes property missing, default to 0", async () => {
+  const newBlog = {
+    title: "issa blog",
+    author: "tkhan",
+    url: "www.issablog.io",
+  };
+
+  await api.post("/api/blogs").send(newBlog);
+
+  const blogsAtEnd = await listHelper.blogsInDb();
+  const newBlogInDb = blogsAtEnd.find((blog) => blog.title === "issa blog");
+  console.log(newBlogInDb)
+  expect(newBlogInDb.likes).toBe(0);
+});
+
 test("dummy returns one", () => {
   const blogs = [];
 
