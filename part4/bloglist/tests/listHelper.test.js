@@ -64,8 +64,17 @@ test("likes property missing, default to 0", async () => {
 
   const blogsAtEnd = await listHelper.blogsInDb();
   const newBlogInDb = blogsAtEnd.find((blog) => blog.title === "issa blog");
-  console.log(newBlogInDb)
+  console.log(newBlogInDb);
   expect(newBlogInDb.likes).toBe(0);
+});
+
+test("title or url missing, 400 response", async () => {
+  const newBlog = {
+    author: "tylr",
+    likes: 69,
+  };
+
+  await api.post("/api/blogs").send(newBlog).expect(400);
 });
 
 test("dummy returns one", () => {
