@@ -13,68 +13,93 @@ beforeEach(async () => {
   await Promise.all(promiseArray);
 });
 
-test("blogs are returned as json", async () => {
-  console.log("entered test");
-  await api
-    .get("/api/blogs")
-    .expect(200)
-    .expect("Content-Type", /application\/json/);
+test("dummy returns one", () => {
+  const blogs = [];
+
+  const result = listHelper.dummy(blogs);
+  expect(result).toBe(1);
 });
 
-test("all blogs are returned", async () => {
-  const response = await api.get("/api/blogs");
-  expect(response.body).toHaveLength(listHelper.blogs.length);
+describe("when there are blogs saved", () => {
+  test("blogs are returned as json", async () => {
+    console.log("entered test");
+    await api
+      .get("/api/blogs")
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+  });
+
+  test("all blogs are returned", async () => {
+    const response = await api.get("/api/blogs");
+    expect(response.body).toHaveLength(listHelper.blogs.length);
+  });
+
+  test("unique identifier property is named id", async () => {
+    const response = await api.get("/api/blogs");
+    const blogIds = response.body.every((blog) => blog.id !== undefined);
+    expect(blogIds).toBeDefined();
+  });
 });
 
-test("unique identifier property is named id", async () => {
-  const response = await api.get("/api/blogs");
-  const blogIds = response.body.every((blog) => blog.id !== undefined);
-  expect(blogIds).toBeDefined();
+describe("add a new blog", () => {
+  test("a valid blog can be added", async () => {
+    const newBlog = {
+      title: "issa blog",
+      author: "tkhan",
+      url: "www.issablog.io",
+      likes: 420,
+    };
+
+    await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .expect(201)
+      .expect("Content-Type", /application\/json/);
+
+    const blogsAtEnd = await listHelper.blogsInDb();
+    expect(blogsAtEnd).toHaveLength(listHelper.blogs.length + 1);
+
+    const contents = blogsAtEnd.map((blog) => blog.title);
+    expect(contents).toContain("issa blog");
+  });
+
+  test("fails with status code 400 if data invalid", async () => {
+    const newBlog = {
+      author: "tyler",
+    };
+
+    await api.post("/api/blogs").send(newBlog).expect(400);
+
+    const blogsAtEnd = await listHelper.blogsInDb();
+
+    expect(blogsAtEnd).toHaveLength(listHelper.blogs.length);
+  });
 });
 
-test("a valid blog can be added", async () => {
-  const newBlog = {
-    title: "issa blog",
-    author: "tkhan",
-    url: "www.issablog.io",
-    likes: 420,
-  };
+describe("missing properties", () => {
+  test("likes property missing, default to 0", async () => {
+    const newBlog = {
+      title: "issa blog",
+      author: "tkhan",
+      url: "www.issablog.io",
+    };
 
-  await api
-    .post("/api/blogs")
-    .send(newBlog)
-    .expect(201)
-    .expect("Content-Type", /application\/json/);
+    await api.post("/api/blogs").send(newBlog);
 
-  const blogsAtEnd = await listHelper.blogsInDb();
-  expect(blogsAtEnd).toHaveLength(listHelper.blogs.length + 1);
+    const blogsAtEnd = await listHelper.blogsInDb();
+    const newBlogInDb = blogsAtEnd.find((blog) => blog.title === "issa blog");
+    console.log(newBlogInDb);
+    expect(newBlogInDb.likes).toBe(0);
+  });
 
-  const contents = blogsAtEnd.map((blog) => blog.title);
-  expect(contents).toContain("issa blog");
-});
+  test("title or url missing, 400 response", async () => {
+    const newBlog = {
+      author: "tylr",
+      likes: 69,
+    };
 
-test("likes property missing, default to 0", async () => {
-  const newBlog = {
-    title: "issa blog",
-    author: "tkhan",
-    url: "www.issablog.io",
-  };
-
-  await api.post("/api/blogs").send(newBlog);
-
-  const blogsAtEnd = await listHelper.blogsInDb();
-  const newBlogInDb = blogsAtEnd.find((blog) => blog.title === "issa blog");
-  console.log(newBlogInDb);
-  expect(newBlogInDb.likes).toBe(0);
-});
-
-test("title or url missing, 400 response", async () => {
-  const newBlog = {
-    author: "tylr",
-    likes: 69,
-  };
-
-  await api.post("/api/blogs").send(newBlog).expect(400);
+    await api.post("/api/blogs").send(newBlog).expect(400);
+  });
 });
 
 describe("deletion of a blog", () => {
@@ -93,26 +118,41 @@ describe("deletion of a blog", () => {
   });
 });
 
-test("dummy returns one", () => {
-  const blogs = [];
+describe("update the likes of a saved note", () => {
+  test("succeeds with valid data", async () => {
+    const blogsAtStart = await listHelper.blogsInDb();
+    const blogToUpdate = blogsAtStart[0];
 
-  const result = listHelper.dummy(blogs);
-  expect(result).toBe(1);
+    const updatedBlog = {
+      likes: 1117,
+    };
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(updatedBlog)
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+
+    const blogsAtEnd = await listHelper.blogsInDb();
+    const updatedBlogInDb = blogsAtEnd.map((blog) => blog.likes);
+
+    expect(updatedBlogInDb).toContain(updatedBlog.likes);
+  });
 });
 
 describe("total likes", () => {
-  const listWithOneBlog = [
-    {
-      _id: "5a422aa71b54a676234d17f8",
-      title: "Go To Statement Considered Harmful",
-      author: "Edsger W. Dijkstra",
-      url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
-      likes: 5,
-      __v: 0,
-    },
-  ];
-
   test("when list has only one blog, equals the likes of that", () => {
+    const listWithOneBlog = [
+      {
+        _id: "5a422aa71b54a676234d17f8",
+        title: "Go To Statement Considered Harmful",
+        author: "Edsger W. Dijkstra",
+        url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
+        likes: 5,
+        __v: 0,
+      },
+    ];
+
     const result = listHelper.totalLikes(listWithOneBlog);
     expect(result).toBe(5);
   });
