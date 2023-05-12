@@ -240,6 +240,14 @@ describe("when there is initially one user in db", () => {
     const usernames = usersAtEnd.map((u) => u.username);
     expect(usernames).toContain(newUser.username);
   });
+
+  test("adding an already existing username, results in status code 422", async () => {
+    await api
+      .post("/api/users")
+      .send({username: "root", name: "Tyler Khan", password: "test" })
+      .expect(422)
+      .expect("Content-Type", /application\/json/);
+  })
 });
 
 afterAll(async () => {

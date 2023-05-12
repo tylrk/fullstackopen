@@ -11,16 +11,16 @@ usersRouter.post("/", async (request, response) => {
   const { username, name, password } = request.body;
 
   if (!username) {
-    return response.status(400).json({ error: "Username missing" });
+    return response.status(422).json({ error: "Username missing" });
   } else if (username.length < 3) {
     return response
-      .status(400)
+      .status(422)
       .json({ error: "Username must be 3 or more characters" });
   } else if (!password) {
-    return response.status(400).json({ error: "Password missing" });
+    return response.status(422).json({ error: "Password missing" });
   } else if (password.length < 3) {
     return response
-      .status(400)
+      .status(422)
       .json({ error: "Password must be 3 or more characters" });
   }
 
