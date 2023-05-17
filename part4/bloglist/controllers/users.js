@@ -3,27 +3,23 @@ const usersRouter = require("express").Router();
 const User = require("../models/user");
 
 usersRouter.get("/", async (request, response) => {
-  const users = await User.find({}).populate("blogs", { url: 1, title: 1, author: 1 });
+  const users = await User.find({}).populate("blogs", {
+    url: 1,
+    title: 1,
+    author: 1,
+    likes: 1,
+  });
   response.json(users);
 });
 
 usersRouter.post("/", async (request, response) => {
   const { username, name, password } = request.body;
 
-  if (!username) {
-    return response.status(422).json({ error: "Username missing" });
-  } else if (username.length < 3) {
-    return response
-      .status(422)
-      .json({ error: "Username must be 3 or more characters" });
-  } else if (!password) {
-    return response.status(422).json({ error: "Password missing" });
-  } else if (password.length < 3) {
-    return response
-      .status(422)
-      .json({ error: "Password must be 3 or more characters" });
+  if (!password || password.length < 3) {
+    return response.status(400).json({
+      error: "`password` is shorter than the minimum allowed length (3)",
+    });
   }
-
   const saltRounds = 10;
   const passwordHash = await bcrypt.hash(password, saltRounds);
 
