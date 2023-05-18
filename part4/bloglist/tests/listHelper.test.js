@@ -115,6 +115,7 @@ describe("blogs api", () => {
         const blog = {
           author: "Edsger W. Dijkstra",
           url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
+          likes: 5,
         };
 
         const response = await api
@@ -123,6 +124,8 @@ describe("blogs api", () => {
           .send(blog)
           .expect(400)
           .expect("Content-Type", /application\/json/);
+
+          expect(response.body.error).toContain("`title` is required.");
       });
 
       test("if author is missing, creation fails", async () => {
