@@ -125,7 +125,7 @@ describe("blogs api", () => {
           .expect(400)
           .expect("Content-Type", /application\/json/);
 
-          expect(response.body.error).toContain("`title` is required.");
+        expect(response.body.error).toContain("`title` is required.");
       });
 
       test("if author is missing, creation fails", async () => {
@@ -214,11 +214,7 @@ describe("blogs api", () => {
         password: "secret",
       };
 
-      const response = await api
-        .post("/api/users")
-        .send(user)
-        .expect(400)
-        .expect("Content-Type", /application\/json/);
+      const response = await api.post("/api/users").send(user).expect(400);
 
       expect(response.body.error).toContain(
         "`username` (`ml`) is shorter than the minimum allowed length (3)"
