@@ -7,3 +7,24 @@
     padding: 10px;
     margin-bottom: 10px;
 }
+
+.username {
+    margin-right: 10px;
+}
+
+.password {
+    margin-right: 14px;
+}
+
+.passForm {
+    margin-top: 5px;
+    margin-bottom: 12px;
+}
+
+.blog {
+    margin-bottom: 5px;
+}
+
+.loggedIn {
+    font-size: 18px;
+}

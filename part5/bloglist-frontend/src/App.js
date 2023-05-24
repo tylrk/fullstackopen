@@ -35,11 +35,11 @@ const App = () => {
     }
   };
 
-  return (
-    <div>
-      <h2>Blogs</h2>
-      <Notification message={errorMessage} />
-      {!user && (
+  if (!user) {
+    return (
+      <div>
+        <h2>Log into the Application</h2>
+        <Notification message={errorMessage} />
         <LoginForm
           handleLogin={handleLogin}
           username={username}
@@ -47,9 +47,17 @@ const App = () => {
           setUsername={({ target }) => setUsername(target.value)}
           setPassword={({ target }) => setPassword(target.value)}
         />
-      )}
-      {user &&
-        blogs.map((blog) => <Blog key={blog.id} blog={blog} />)}
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <h2>Blogs</h2>
+      <p className="loggedIn">{`${user.name} is logged in`}</p>
+      {blogs.map((blog) => (
+        <Blog key={blog.id} blog={blog} />
+      ))}
     </div>
   );
 };
