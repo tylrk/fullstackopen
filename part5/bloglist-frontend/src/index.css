@@ -28,3 +28,21 @@
 .loggedIn {
     font-size: 18px;
 }
+
+.title {
+    margin-right: 16px;
+}
+
+.authorForm {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.url {
+    margin-right: 14px;
+}
+
+.createButton {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
