@@ -9,7 +9,7 @@ import loginService from "./services/login";
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [newBlog, setNewBlog] = useState({ title: "", author: "", url: "" });
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [message, setMessage] = useState(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
@@ -39,14 +39,26 @@ const App = () => {
       url: newBlog.url,
     };
 
+    if (!blogObject.title || !blogObject.author) {
+      setMessage("Please enter the Title and Author");
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
+      return;
+    }
+
     try {
       const returnedBlog = await blogService.create(blogObject);
       setBlogs(blogs.concat(returnedBlog));
+      setMessage(`A new blog - ${returnedBlog.title} by ${returnedBlog.author} has been added!`);
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
       setNewBlog({ title: "", author: "", url: "" });
     } catch (exception) {
-      setErrorMessage("Please enter all fields");
+      setMessage("An error occurred while adding the blog");
       setTimeout(() => {
-        setErrorMessage(null);
+        setMessage(null);
       }, 5000);
     }
   };
@@ -68,9 +80,9 @@ const App = () => {
       setUsername("");
       setPassword("");
     } catch (exception) {
-      setErrorMessage("Wrong credentials");
+      setMessage("Wrong Username or Password");
       setTimeout(() => {
-        setErrorMessage(null);
+        setMessage(null);
       }, 5000);
     }
   };
@@ -84,7 +96,7 @@ const App = () => {
     return (
       <div>
         <h2>Log into the Application</h2>
-        <Notification message={errorMessage} />
+        <Notification message={message} />
         <LoginForm
           handleLogin={handleLogin}
           username={username}
@@ -99,6 +111,7 @@ const App = () => {
   return (
     <div>
       <h2>Blogs</h2>
+      <Notification message={message} />
       <p className="loggedIn">
         {`${user.name} is logged in `}
         <button onClick={handleLogout}>Logout</button>
