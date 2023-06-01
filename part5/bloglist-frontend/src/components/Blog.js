@@ -1,7 +1,35 @@
-const Blog = ({ blog }) => (
-  <div className="blog">
-    {blog.title} - {blog.author}
-  </div>
-);
+import { useState } from "react";
+
+const Blog = ({ blog, user }) => {
+  const [visible, setVisible] = useState(false);
+
+  const showWhenVisible = { display: visible ? "" : "none" };
+
+  const toggleVisibility = () => {
+    setVisible(!visible);
+  };
+
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: "solid",
+    borderWidth: 1,
+    marginBottom: 5,
+  };
+
+  return (
+    <div style={blogStyle}>
+      {blog.title} - {blog.author}{" "}
+      <button onClick={toggleVisibility}>{visible ? "Hide" : "View"}</button>
+      <div style={showWhenVisible}>
+        <a href={`http://${blog.url}`} target="_blank" rel="noopener noreferrer">{blog.url}</a>
+        <br />
+        <span>likes 0</span>
+        <br />
+        <span>{user.name}</span>
+      </div>
+    </div>
+  );
+};
 
 export default Blog;
