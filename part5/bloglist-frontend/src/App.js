@@ -9,7 +9,6 @@ import loginService from "./services/login";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [newBlog, setNewBlog] = useState({ title: "", author: "", url: "" });
   const [message, setMessage] = useState(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -28,14 +27,13 @@ const App = () => {
     }
   }, []);
 
-  const addBlog = async (event) => {
-    event.preventDefault();
+  const addBlog = async (blogObject) => {
     blogFormRef.current.toggleVisibility();
-    const blogObject = {
-      title: newBlog.title,
-      author: newBlog.author,
-      url: newBlog.url,
-    };
+    // const blogObject = {
+    //   title: newBlog.title,
+    //   author: newBlog.author,
+    //   url: newBlog.url,
+    // };
 
     if (!blogObject.title || !blogObject.author) {
       setMessage("Please enter the Title and Author");
@@ -54,18 +52,12 @@ const App = () => {
       setTimeout(() => {
         setMessage(null);
       }, 5000);
-      setNewBlog({ title: "", author: "", url: "" });
     } catch (exception) {
       setMessage("An error occurred while adding the blog");
       setTimeout(() => {
         setMessage(null);
       }, 5000);
     }
-  };
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setNewBlog({ ...newBlog, [name]: value });
   };
 
   const handleLogin = async (event) => {
@@ -123,9 +115,7 @@ const App = () => {
       <h2>Create New Blog</h2>
       <Toggle buttonLabel="New Blog" ref={blogFormRef}>
         <BlogForm
-          addBlog={addBlog}
-          newBlog={newBlog}
-          handleInputChange={handleInputChange}
+          createBlog={addBlog}
         />
       </Toggle>
       <br/>
