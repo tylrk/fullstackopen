@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Blog from "./components/Blog";
 import Notification from "./components/Notification";
+import Toggle from "./components/Toggle";
 import LoginForm from "./components/LoginForm";
 import BlogForm from "./components/BlogForm";
 import blogService from "./services/blogs";
@@ -27,12 +28,9 @@ const App = () => {
     }
   }, []);
 
-  if (!blogs) {
-    return null;
-  }
-
   const addBlog = async (event) => {
     event.preventDefault();
+    blogFormRef.current.toggleVisibility();
     const blogObject = {
       title: newBlog.title,
       author: newBlog.author,
@@ -50,7 +48,9 @@ const App = () => {
     try {
       const returnedBlog = await blogService.create(blogObject);
       setBlogs(blogs.concat(returnedBlog));
-      setMessage(`A new blog - ${returnedBlog.title} by ${returnedBlog.author} has been added!`);
+      setMessage(
+        `A new blog - ${returnedBlog.title} by ${returnedBlog.author} has been added!`
+      );
       setTimeout(() => {
         setMessage(null);
       }, 5000);
@@ -92,36 +92,43 @@ const App = () => {
     setUser(null);
   };
 
+  const blogFormRef = useRef();
+
   if (!user) {
     return (
       <div>
-        <h2>Log into the Application</h2>
+        <h1>Log into the Application</h1>
         <Notification message={message} />
-        <LoginForm
-          handleLogin={handleLogin}
-          username={username}
-          password={password}
-          setUsername={({ target }) => setUsername(target.value)}
-          setPassword={({ target }) => setPassword(target.value)}
-        />
+        <Toggle buttonLabel="Login">
+          <LoginForm
+            handleLogin={handleLogin}
+            username={username}
+            password={password}
+            setUsername={({ target }) => setUsername(target.value)}
+            setPassword={({ target }) => setPassword(target.value)}
+          />
+        </Toggle>
       </div>
     );
   }
 
   return (
     <div>
-      <h2>Blogs</h2>
+      <h1>Blogs</h1>
       <Notification message={message} />
       <p className="loggedIn">
         {`${user.name} is logged in `}
         <button onClick={handleLogout}>Logout</button>
       </p>
       <h2>Create New Blog</h2>
-      <BlogForm
-        addBlog={addBlog}
-        newBlog={newBlog}
-        handleInputChange={handleInputChange}
-      />
+      <Toggle buttonLabel="New Blog" ref={blogFormRef}>
+        <BlogForm
+          addBlog={addBlog}
+          newBlog={newBlog}
+          handleInputChange={handleInputChange}
+        />
+      </Toggle>
+      <br/>
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} />
       ))}
