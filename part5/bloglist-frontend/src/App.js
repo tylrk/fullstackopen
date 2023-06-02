@@ -29,11 +29,6 @@ const App = () => {
 
   const addBlog = async (blogObject) => {
     blogFormRef.current.toggleVisibility();
-    // const blogObject = {
-    //   title: newBlog.title,
-    //   author: newBlog.author,
-    //   url: newBlog.url,
-    // };
 
     if (!blogObject.title || !blogObject.author) {
       setMessage("Please enter the Title and Author");
@@ -54,6 +49,25 @@ const App = () => {
       }, 5000);
     } catch (exception) {
       setMessage("An error occurred while adding the blog");
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
+    }
+  };
+
+  const addLikes = async (id) => {
+    const blog = blogs.find((b) => b.id === id);
+    const likedBlog = { ...blog, likes: blog.likes + 1 };
+
+    try {
+      const returnedBlog = await blogService.update(id, likedBlog);
+      setBlogs(blogs.map((blog) => (blog.id !== id ? blog : returnedBlog)));
+      setMessage(`You liked ${returnedBlog.title}!`);
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
+    } catch (exception) {
+      setMessage("An error occurred. Like was not registered");
       setTimeout(() => {
         setMessage(null);
       }, 5000);
@@ -114,13 +128,11 @@ const App = () => {
       </p>
       <h2>Create New Blog</h2>
       <Toggle buttonLabel="New Blog" ref={blogFormRef}>
-        <BlogForm
-          createBlog={addBlog}
-        />
+        <BlogForm createBlog={addBlog} />
       </Toggle>
-      <br/>
+      <br />
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} user={user}/>
+        <Blog key={blog.id} blog={blog} user={user} like={addLikes} />
       ))}
     </div>
   );
