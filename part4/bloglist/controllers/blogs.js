@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const Blog = require("../models/blog");
+const User = require("../models/user");
 
 const { userExtractor } = require("../utils/middleware");
 
@@ -11,22 +12,22 @@ router.get("/", async (request, response) => {
 
 router.post("/", userExtractor, async (request, response) => {
   const { title, author, url, likes } = request.body;
-  const blog = new Blog({
-    title,
-    author,
-    url,
-    likes: likes ? likes : 0,
-  });
-
   const user = request.user;
 
   if (!user) {
     return response.status(401).json({ error: "operation not permitted" });
   }
 
-  blog.user = user._id;
+  const blog = new Blog({
+    title,
+    author,
+    url,
+    likes: likes ? likes : 0,
+    user: user._id,
+  });
 
   const createdBlog = await blog.save();
+  await createdBlog.populate("user", { username: 1, name: 1 });
 
   user.blogs = user.blogs.concat(createdBlog._id);
   await user.save();
@@ -41,7 +42,7 @@ router.put("/:id", async (request, response) => {
     request.params.id,
     { title, url, author, likes },
     { new: true }
-  );
+  ).populate("user", { username: 1, name: 1 });
 
   response.json(updatedBlog);
 });
