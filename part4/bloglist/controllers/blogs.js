@@ -1,6 +1,5 @@
 const router = require("express").Router();
 const Blog = require("../models/blog");
-const User = require("../models/user");
 
 const { userExtractor } = require("../utils/middleware");
 
@@ -48,7 +47,7 @@ router.put("/:id", async (request, response) => {
 });
 
 router.delete("/:id", userExtractor, async (request, response) => {
-  const blog = await Blog.findById(request.params.id);
+  const blog = await Blog.findById(request.params.id)
 
   const user = request.user;
 

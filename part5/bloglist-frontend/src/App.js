@@ -74,6 +74,24 @@ const App = () => {
     }
   };
 
+  const deleteBlog = async (id) => {
+    const blog = blogs.find((b) => b.id === id);
+
+    try {
+      const blogToDelete = await blogService.remove(id);
+      setBlogs(blogs.filter((b) => b.id !== blogToDelete.id));
+      setMessage(`You deleted ${blog.title}!`);
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
+    } catch (exception) {
+      setMessage("An error occurred. Like was not registered");
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
+    }
+  };
+
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
@@ -134,7 +152,13 @@ const App = () => {
       {blogs
         .sort((a, b) => b.likes - a.likes)
         .map((blog) => (
-          <Blog key={blog.id} blog={blog} user={user} like={addLikes} />
+          <Blog
+            key={blog.id}
+            blog={blog}
+            user={user}
+            like={addLikes}
+            deleteBlog={deleteBlog}
+          />
         ))}
     </div>
   );
