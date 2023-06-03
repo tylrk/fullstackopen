@@ -57,8 +57,8 @@ router.delete("/:id", userExtractor, async (request, response) => {
 
   user.blogs = user.blogs.filter((b) => b.toString() !== blog.id.toString());
 
-  await user.save();
   await blog.deleteOne();
+  await user.save();
 
   response.status(204).end();
 });

@@ -77,19 +77,21 @@ const App = () => {
   const deleteBlog = async (id) => {
     const blog = blogs.find((b) => b.id === id);
 
+    if(window.confirm(`Delete blog, ${blog.title} by ${blog.author}?`)) {
     try {
-      const blogToDelete = await blogService.remove(id);
-      setBlogs(blogs.filter((b) => b.id !== blogToDelete.id));
-      setMessage(`You deleted ${blog.title}!`);
+      await blogService.remove(id);
+      setBlogs(blogs.filter((b) => b.id !== id));
+      setMessage(`You deleted ${blog.title} by ${blog.author}`);
       setTimeout(() => {
         setMessage(null);
       }, 5000);
     } catch (exception) {
-      setMessage("An error occurred. Like was not registered");
+      setMessage("Unauthorized user. Blog was not deleted");
       setTimeout(() => {
         setMessage(null);
       }, 5000);
     }
+  }
   };
 
   const handleLogin = async (event) => {
