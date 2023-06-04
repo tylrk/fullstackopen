@@ -77,21 +77,21 @@ const App = () => {
   const deleteBlog = async (id) => {
     const blog = blogs.find((b) => b.id === id);
 
-    if(window.confirm(`Delete blog, ${blog.title} by ${blog.author}?`)) {
-    try {
-      await blogService.remove(id);
-      setBlogs(blogs.filter((b) => b.id !== id));
-      setMessage(`You deleted ${blog.title} by ${blog.author}`);
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
-    } catch (exception) {
-      setMessage("Unauthorized user. Blog was not deleted");
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
+    if (window.confirm(`Delete blog, ${blog.title} by ${blog.author}?`)) {
+      try {
+        await blogService.remove(id);
+        setBlogs(blogs.filter((b) => b.id !== id));
+        setMessage(`You deleted ${blog.title} by ${blog.author}`);
+        setTimeout(() => {
+          setMessage(null);
+        }, 5000);
+      } catch (exception) {
+        setMessage("Unauthorized user. Blog was not deleted");
+        setTimeout(() => {
+          setMessage(null);
+        }, 5000);
+      }
     }
-  }
   };
 
   const handleLogin = async (event) => {

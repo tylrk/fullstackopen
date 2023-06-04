@@ -1,7 +1,12 @@
 import { useState } from "react";
 
 const BlogForm = ({ createBlog }) => {
-  const [newBlog, setNewBlog] = useState({ title: "", author: "", url: "" , likes: 0 });
+  const [newBlog, setNewBlog] = useState({
+    title: "",
+    author: "",
+    url: "",
+    likes: 0,
+  });
 
   const addBlog = (event) => {
     event.preventDefault();
@@ -41,7 +46,9 @@ const BlogForm = ({ createBlog }) => {
         <input
           value={newBlog.url}
           name="url"
-          onChange={event => setNewBlog({...newBlog, url: event.target.value})}
+          onChange={(event) =>
+            setNewBlog({ ...newBlog, url: event.target.value })
+          }
         />
         <br />
         <button className="createButton" type="submit">
