@@ -3,8 +3,6 @@ import { useState } from "react";
 const Blog = ({ blog, like, deleteBlog }) => {
   const [visible, setVisible] = useState(false);
 
-  const showWhenVisible = { display: visible ? "" : "none" };
-
   const toggleVisibility = () => {
     setVisible(!visible);
   };
@@ -21,22 +19,24 @@ const Blog = ({ blog, like, deleteBlog }) => {
     <div style={blogStyle}>
       {blog.title} - {blog.author}{" "}
       <button onClick={toggleVisibility}>{visible ? "Hide" : "View"}</button>
-      <div style={showWhenVisible}>
-        <a
-          href={`http://${blog.url}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {blog.url}
-        </a>
-        <br />
-        <span>Likes {blog.likes} </span>
-        <button onClick={() => like(blog.id)}>Like</button>
-        <br />
-        <span>{blog.user.name}</span>
-        <br />
-        <button onClick={() => deleteBlog(blog.id)}>Delete</button>
-      </div>
+      {visible && (
+        <div>
+          <a
+            href={`http://${blog.url}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {blog.url}
+          </a>
+          <br />
+          <span>Likes {blog.likes} </span>
+          <button onClick={() => like(blog.id)}>Like</button>
+          <br />
+          <span>{blog.user.name}</span>
+          <br />
+          <button onClick={() => deleteBlog(blog.id)}>Delete</button>
+        </div>
+      )}
     </div>
   );
 };
