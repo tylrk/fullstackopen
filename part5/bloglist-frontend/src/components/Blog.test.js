@@ -1,7 +1,7 @@
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
 import { render, screen } from "@testing-library/react";
-// import userEvent from "@testing-library/user-event";
+import userEvent from "@testing-library/user-event";
 import Blog from "./Blog";
 
 test("renders blog title and author", () => {
@@ -27,4 +27,29 @@ test("renders blog title and author", () => {
   expect(authorElement).toBeDefined();
   expect(urlElement).toBeNull();
   expect(likesElement).toBeNull();
+});
+
+test("when view button is clicked, the url and likes are shown", async () => {
+  const blog = {
+    title: "Test Blog",
+    author: "TK",
+    url: "www.test.com",
+    likes: 420,
+    user: {
+      name: "Tyler",
+      username: "tylrk",
+    },
+  };
+
+  render(<Blog blog={blog} />);
+
+  const user = userEvent.setup();
+  const button = screen.getByText("View");
+  await user.click(button);
+
+  const urlElement = screen.queryByText(/www.test.com/);
+  const likesElement = screen.queryByText(/420/);
+
+  expect(urlElement).toBeInTheDocument();
+  expect(likesElement).toBeInTheDocument();
 });
