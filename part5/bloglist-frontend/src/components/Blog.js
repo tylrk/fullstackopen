@@ -20,7 +20,7 @@ const Blog = ({ blog, like, deleteBlog }) => {
       {blog.title} - {blog.author}{" "}
       <button onClick={toggleVisibility}>{visible ? "Hide" : "View"}</button>
       {visible && (
-        <div>
+        <div className="details">
           <a
             href={`http://${blog.url}`}
             target="_blank"
