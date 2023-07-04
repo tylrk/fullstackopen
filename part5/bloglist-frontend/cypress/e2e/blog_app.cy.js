@@ -33,7 +33,7 @@ describe("Blog app", function () {
       cy.get("#password").type("wrong");
       cy.get("#login-button").click();
 
-      cy.get(".error")
+      cy.get(".notification")
         .should("contain", "Wrong Username or Password")
         .and("have.css", "color", "rgb(255, 0, 0)")
         .and("have.css", "border-style", "solid");
@@ -56,6 +56,36 @@ describe("Blog app", function () {
       cy.get("#create").click();
       cy.contains("Test Blog");
       cy.contains("TK");
+    });
+
+    describe("and multiple blogs exist", function () {
+      beforeEach(function () {
+        cy.createBlog({
+          title: "first blog",
+          author: "TK",
+          url: "www.first.com",
+        });
+        cy.createBlog({
+          title: "second blog",
+          author: "TK",
+          url: "www.second.com",
+        });
+        cy.createBlog({
+          title: "third blog",
+          author: "TK",
+          url: "www.third.com",
+        });
+      });
+
+      it("users can like a blog", function () {
+        cy.contains("View").click();
+        cy.get("#like").click();
+
+        cy.get(".notification")
+          .should("contain", "You liked")
+          .and("have.css", "color", "rgb(255, 0, 0)")
+          .and("have.css", "border-style", "solid");
+      });
     });
   });
 });
