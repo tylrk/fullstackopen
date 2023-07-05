@@ -86,6 +86,16 @@ describe("Blog app", function () {
           .and("have.css", "color", "rgb(255, 0, 0)")
           .and("have.css", "border-style", "solid");
       });
+
+      it("user can delete a blog they created", function () {
+        cy.contains("View").click();
+        cy.contains("Delete").click();
+
+        cy.get(".notification")
+          .should("contain", "You deleted")
+          .and("have.css", "color", "rgb(255, 0, 0)")
+          .and("have.css", "border-style", "solid");
+      });
     });
   });
 });
