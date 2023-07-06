@@ -8,7 +8,14 @@ describe("Blog app", function () {
       password: "test",
     };
 
+    const user2 = {
+      name: "Tyler",
+      username: "test",
+      password: "test2",
+    };
+
     cy.request("POST", `${Cypress.env("BACKEND")}/users`, user);
+    cy.request("POST", `${Cypress.env("BACKEND")}/users`, user2);
     cy.visit("");
   });
 
@@ -95,6 +102,14 @@ describe("Blog app", function () {
           .should("contain", "You deleted")
           .and("have.css", "color", "rgb(255, 0, 0)")
           .and("have.css", "border-style", "solid");
+      });
+
+      it("only blog creator can see delete button", function () {
+        cy.contains("Logout").click();
+        cy.login({ username: "test", password: "test2" });
+        cy.contains("View").click();
+
+        cy.should("not.contain", "Delete");
       });
     });
   });
