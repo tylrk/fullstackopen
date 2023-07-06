@@ -111,6 +111,17 @@ describe("Blog app", function () {
 
         cy.should("not.contain", "Delete");
       });
+
+      it("blogs are ordered by most likes", function () {
+        cy.contains("first blog").contains("View").click();
+        cy.get("#like").click();
+        cy.get("#like").click();
+        cy.contains("Hide").click();
+        cy.contains("third blog").contains("View").click();
+        cy.get("#like").click();
+        cy.get(".blog").eq(0).should("contain", "first blog");
+        cy.get(".blog").eq(1).should("contain", "third blog");
+      });
     });
   });
 });
