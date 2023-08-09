@@ -2,9 +2,9 @@
 import { useSelector } from "react-redux";
 
 const Notification = () => {
-  const notification = useSelector(({ filter, anecdotes, notification }) => {
-    return notification;
-  });
+  const notification = useSelector(({ notifications }) => 
+     notifications
+  );
 
   const style = {
     border: "solid",
