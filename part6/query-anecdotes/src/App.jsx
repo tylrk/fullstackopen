@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import AnecdoteForm from "./components/AnecdoteForm";
 import Notification from "./components/Notification";
 import { getAnecdotes, voteOnAnecdote } from "./requests";
+import { NotifContextProvider } from "./NotifContext";
 
 const App = () => {
   const queryClient = useQueryClient();
@@ -34,10 +35,10 @@ const App = () => {
   return (
     <div>
       <h3>Anecdote app</h3>
-
-      <Notification />
-      <AnecdoteForm />
-
+      <NotifContextProvider>
+        <Notification />
+        <AnecdoteForm />
+      </NotifContextProvider>
       {anecdotes.map((anecdote) => (
         <div key={anecdote.id}>
           <div>{anecdote.content}</div>

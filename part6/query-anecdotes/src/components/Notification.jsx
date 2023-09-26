@@ -1,18 +1,18 @@
+import { NotifContext } from "../NotifContext";
+import { useContext } from "react";
+
 const Notification = () => {
   const style = {
-    border: 'solid',
+    border: "solid",
     padding: 10,
     borderWidth: 1,
-    marginBottom: 5
-  }
-  
-  if (true) return null
+    marginBottom: 5,
+  };
+  const { notif } = useContext(NotifContext);
 
-  return (
-    <div style={style}>
-      
-    </div>
-  )
-}
+  if (!notif) return null;
 
-export default Notification
+  return <div style={style}>{notif}</div>;
+};
+
+export default Notification;
