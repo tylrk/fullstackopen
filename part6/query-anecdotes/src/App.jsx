@@ -2,10 +2,17 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import AnecdoteForm from "./components/AnecdoteForm";
 import Notification from "./components/Notification";
 import { getAnecdotes, voteOnAnecdote } from "./requests";
-import { NotifContextProvider } from "./NotifContext";
+import {
+  NotifContextProvider,
+  NotifContext,
+  showNotif,
+  hideNotif,
+} from "./NotifContext";
+import { useContext } from "react";
 
 const App = () => {
   const queryClient = useQueryClient();
+  const { notifDispatch } = useContext(NotifContext);
 
   const voteMutation = useMutation(voteOnAnecdote, {
     onSuccess: () => {
@@ -14,6 +21,8 @@ const App = () => {
   });
   const handleVote = (anecdote) => {
     voteMutation.mutate({ ...anecdote, votes: anecdote.votes + 1 });
+    showNotif(notifDispatch, `You voted for anecdote '${anecdote.content}'`);
+    setTimeout(() => hideNotif(notifDispatch), 5000);
   };
 
   const result = useQuery({
@@ -35,10 +44,8 @@ const App = () => {
   return (
     <div>
       <h3>Anecdote app</h3>
-      <NotifContextProvider>
-        <Notification />
-        <AnecdoteForm />
-      </NotifContextProvider>
+      <Notification />
+      <AnecdoteForm />
       {anecdotes.map((anecdote) => (
         <div key={anecdote.id}>
           <div>{anecdote.content}</div>
