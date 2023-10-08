@@ -11,6 +11,10 @@ const AnecdoteForm = () => {
     onSuccess: () => {
       queryClient.invalidateQueries("anecdotes");
     },
+    onError: (error) => {
+      showNotif(notifDispatch, error.response.data.error);
+      setTimeout(() => hideNotif(notifDispatch), 5000);
+    },
   });
 
   const addAnecdote = (event) => {
