@@ -1,12 +1,25 @@
 import { useState } from "react";
-import {
-  Routes,
-  Route,
-  Link,
-  Navigate,
-  useNavigate,
-  useMatch,
-} from "react-router-dom";
+import { Routes, Route, Link, useNavigate, useMatch } from "react-router-dom";
+
+const Menu = () => {
+  const padding = {
+    paddingRight: 5,
+  };
+
+  return (
+    <div>
+      <Link style={padding} to="/">
+        anecdotes
+      </Link>
+      <Link style={padding} to="/create">
+        create new
+      </Link>
+      <Link style={padding} to="/about">
+        about
+      </Link>
+    </div>
+  );
+};
 
 const AnecdoteList = ({ anecdotes }) => (
   <div>
@@ -64,19 +77,23 @@ const Footer = () => (
   </footer>
 );
 
-const CreateNew = (props) => {
+const CreateNew = ({ addNew }) => {
   const [content, setContent] = useState("");
   const [author, setAuthor] = useState("");
   const [info, setInfo] = useState("");
 
+  const navigate = useNavigate();
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    props.addNew({
+    addNew({
       content,
       author,
       info,
       votes: 0,
     });
+
+    navigate("/");
   };
 
   return (
@@ -113,6 +130,21 @@ const CreateNew = (props) => {
   );
 };
 
+const Notification = ({ notification }) => {
+  const style = {
+    border: "solid",
+    padding: 5,
+    borderWidth: 1,
+    marginBottom: 3,
+  };
+
+  return (
+    <div style={style}>
+      <p>{notification}</p>
+    </div>
+  );
+};
+
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
     {
@@ -136,6 +168,8 @@ const App = () => {
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000);
     setAnecdotes(anecdotes.concat(anecdote));
+    setNotification(`A new anecdote "${anecdote.content}" was created!`);
+    setTimeout(() => setNotification(""), 5000);
   };
 
   const match = useMatch("/anecdotes/:id");
@@ -153,31 +187,21 @@ const App = () => {
     setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)));
   };
 
-  const padding = {
-    paddingRight: 5,
-  };
-
   return (
     <div>
       <h1>Software anecdotes</h1>
-      <div>
-        <Link style={padding} to="/">
-          anecdotes
-        </Link>
-        <Link style={padding} to="/create">
-          create new
-        </Link>
-        <Link style={padding} to="/about">
-          about
-        </Link>
-      </div>
+      <Menu />
+      {notification ? <Notification notification={notification} /> : ""}
       <Routes>
         <Route
           path="/anecdotes/:id"
           element={<Anecdote anecdote={anecdote} />}
         />
         <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
-        <Route path="/create" element={<CreateNew addNew={addNew} />} />
+        <Route
+          path="/create"
+          element={<CreateNew addNew={addNew} notification={notification} />}
+        />
         <Route path="/about" element={<About />} />
       </Routes>
       <Footer />
